@@ -25,6 +25,19 @@ myapp.config["SQLALCHEMY_POOL_RECYCLE"] = 299
 myapp.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(myapp)
 Bootstrap(myapp)
+login_manager = LoginManager()
+login_manager.init_app(myapp)
+login_manager.login_view = 'login'
+SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+class Users(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(20), unique=True)
+    email = db.Column(db.String(50), unique=True)
+    password = db.Column(db.String(80))
+@login_manager.user_loader
+def load_user(users_id):
+    return Users.query.get(int(users_id))
 
 class LoginForm(FlaskForm):
     username = StringField('username', validators=[InputRequired(), Length(min=4, max=20)])
