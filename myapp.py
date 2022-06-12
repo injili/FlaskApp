@@ -48,6 +48,17 @@ class RegisterForm(FlaskForm):
     password = PasswordField('password', validators=[InputRequired(), Length(min=8, max=80)])
     email = StringField('email', validators=[InputRequired(), Email(message='Invalid Email'), Length(max=50)])    
 
+    class Users(db.Model, UserMixin):
+        #code
+
+    def is_active(self):
+       return True
+
+
+    def __repr__(self):
+       return " "
+
+    
 @myapp.route('/')
 def index():
     return render_template("index.html")
