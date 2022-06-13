@@ -6,7 +6,8 @@ from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager,UserMixin,login_user,login_required,logout_user
 
-
+import MySQLdb
+import hashlib
 import os
 import sqlite3
 import flask
@@ -58,7 +59,6 @@ class RegisterForm(FlaskForm):
     def __repr__(self):
        return " "
 
-    
 @myapp.route('/')
 def index():
     return render_template("index.html")
