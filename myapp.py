@@ -67,19 +67,34 @@ def index():
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        return '<h1>' + form.username.data + ' ' + form.password.data + '</h1>'
+       users = Users.query.filter_by(username=form.username.data).first()
+       if users:
+           if users.password == form.password.data:
+               login_user(users)
+               return redirect(url_for('dashboard'))
+       return '<h1> Invalid username or password</h1>'
     return render_template('login.html', form = form)
 
 @myapp.route('/signup', methods=['GET','POST'])
 def signup():
     form = RegisterForm()   
     if form.validate_on_submit():
+        new_users = Users(username=form.username.data, email=form.email.data, password=form.password.data)
+        db.session.add(new_users)
+        db.session.commit()
+        
         return '<h1>' + form.username.data + ' ' + form.password.data + '</h>'
     return render_template("signup.html", form = form)
 
 @myapp.route('/dashboard')
 def dashboard():
     return render_template("dashboard.html")
+
+@myapp.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('index'))
 
 if __name__ == '__main__':
     myapp.run(debug=True)
